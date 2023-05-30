@@ -10,7 +10,7 @@ function makeid(length: number) {
   return result
 }
 
-let iter = 1_000
+let iter = 100
 let strlen = 1_000_000
 
 bench('replaceAll newline char', (b: any) => {

@@ -35,14 +35,3 @@ bench('pre-allocate and fill', (b: any) => {
   }
   b.end()
 })
-
-bench('new Array() constructor', (b: any) => {
-  b.start()
-  for (let i = 0; i < iter; i++) {
-    const arr = new Array(size)
-    for (let i = 0; i < size; i++) {
-      arr[i] = Math.random()
-    }
-  }
-  b.end()
-})

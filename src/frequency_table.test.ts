@@ -14,6 +14,7 @@ function getData() {
 }
 
 type Table = { [key: number]: number }
+
 bench('reduce+optional chaining', (b: any) => {
   b.start()
 
