@@ -1,7 +1,6 @@
-import bench from 'nanobench'
+import { bench, describe } from 'vitest'
 
 const iters = 1_000_000
-const iters2 = 5
 
 async function asyncTightLoop() {
   let val = 0
@@ -20,18 +19,12 @@ function nonAsyncTightLoop() {
   return val
 }
 
-bench('async tight loop', async (b: any) => {
-  b.start()
-  for (let i = 0; i < iters2; i++) {
+describe('async tight loop', () => {
+  bench('async tight loop', async () => {
     await asyncTightLoop()
-  }
-  b.end()
-})
+  })
 
-bench('non-async tight loop', async (b: any) => {
-  b.start()
-  for (let i = 0; i < iters2; i++) {
+  bench('non-async tight loop', () => {
     nonAsyncTightLoop()
-  }
-  b.end()
+  })
 })

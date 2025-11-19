@@ -1,9 +1,6 @@
-import bench from 'nanobench'
+import { bench, describe } from 'vitest'
 
-let iter = 100
 let size = 1_000_000
-
-//motivated by https://stackoverflow.com/questions/5667888/counting-the-occurrences-frequency-of-array-elements/59225909#comment125913203_59225909
 
 function getData() {
   let arr = []
@@ -15,23 +12,17 @@ function getData() {
 
 type Table = { [key: number]: number }
 
-bench('reduce+optional chaining', (b: any) => {
-  b.start()
-
-  for (let i = 0; i < iter; i++) {
+describe('frequency table', () => {
+  bench('reduce+optional chaining', () => {
     const arr = getData()
     const counts = {} as Table
 
     for (const num of arr) {
       counts[num] = counts[num] ? counts[num] + 1 : 1
     }
-  }
-  b.end()
-})
+  })
 
-bench('fromEntries+map->object+reduce', (b: any) => {
-  b.start()
-  for (let i = 0; i < iter; i++) {
+  bench('fromEntries+map->object+reduce', () => {
     const arr = getData()
     const hash = Object.fromEntries([
       ...arr.reduce(
@@ -39,51 +30,35 @@ bench('fromEntries+map->object+reduce', (b: any) => {
         new Map<number, number>(),
       ),
     ])
-  }
-  b.end()
-})
+  })
 
-bench('bit twiddle+object+reduce', (b: any) => {
-  b.start()
-  for (let i = 0; i < iter; i++) {
+  bench('bit twiddle+object+reduce', () => {
     const arr = getData()
     const res = arr.reduce((acc, curr) => {
       acc[curr] = -~acc[curr]
       return acc
     }, {} as Table)
-  }
-  b.end()
-})
+  })
 
-bench('reduce+map', (b: any) => {
-  b.start()
-  for (let i = 0; i < iter; i++) {
+  bench('reduce+map', () => {
     const arr = getData()
 
     const map = arr.reduce(
       (acc, e) => acc.set(e, (acc.get(e) || 0) + 1),
       new Map<number, number>(),
     )
-  }
-  b.end()
-})
+  })
 
-bench('for loop+obj+bit twiddle', (b: any) => {
-  b.start()
-  for (let i = 0; i < iter; i++) {
+  bench('for loop+obj+bit twiddle', () => {
     const arr = getData()
 
     const map = {} as Table
     for (let i = 0; i < arr.length; i++) {
       map[arr[i]] = ~~map[arr[i]] + 1
     }
-  }
-  b.end()
-})
+  })
 
-bench('for loop+map+bit twiddle', (b: any) => {
-  b.start()
-  for (let i = 0; i < iter; i++) {
+  bench('for loop+map+bit twiddle', () => {
     const arr = getData()
 
     const map = new Map<number, number>()
@@ -91,6 +66,5 @@ bench('for loop+map+bit twiddle', (b: any) => {
       const a = map.get(i) ?? 0
       map.set(a, ~~a + 1)
     }
-  }
-  b.end()
+  })
 })
